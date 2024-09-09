@@ -69,6 +69,8 @@ class DraggableFloatWidget extends StatefulWidget {
   /// The height of [DraggableFloatWidget].
   final double height;
 
+  final double dy;
+
   /// The [StreamController] of [OperateEvent].
   final StreamController<OperateEvent>? eventStreamController;
 
@@ -87,6 +89,7 @@ class DraggableFloatWidget extends StatefulWidget {
     Key? key,
     this.width = defaultWidgetWidth,
     this.height = defaultWidgetHeight,
+    this.dy = 0.0,
     this.eventStreamController,
     this.config = const DraggableFloatWidgetBaseConfig(),
     required this.child,
@@ -138,7 +141,7 @@ class _CustomDraggableFloatState extends State<DraggableFloatWidget>
   /// Initialize data related to component locations.
   _initBorderSize() {
     // 1. Relevant data of the screen.
-    var _mediaQueryData = MediaQueryData.fromWindow(window);
+    var _mediaQueryData = MediaQueryData.fromView(PlatformDispatcher.instance.implicitView!);
     _screenWidth = _mediaQueryData.size.width;
     _screenHeight = _mediaQueryData.size.height;
     _halfScreenW = _screenWidth / 2;
@@ -163,8 +166,8 @@ class _CustomDraggableFloatState extends State<DraggableFloatWidget>
     currentState = DraggableFloatWidgetState.SHOW;
     positionX = widget.config.initPositionXInLeft ? _left : _right;
     positionY = widget.config.initPositionYInTop
-        ? _top + widget.config.initPositionYMarginBorder
-        : _bottom - widget.config.initPositionYMarginBorder;
+        ? _top + widget.dy + widget.config.initPositionYMarginBorder
+        : _bottom - widget.dy - widget.config.initPositionYMarginBorder;
     // The sum of the width and the border cannot exceed the screen width,
     // otherwise unexpected errors will occur.
     assert(

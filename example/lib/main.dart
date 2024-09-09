@@ -245,6 +245,7 @@ class OverlayModePage extends StatefulWidget {
 
 class _OverlayModeState extends State<OverlayModePage> {
   OverlayEntry? _overlayEntry;
+  OverlayEntry? _overlayTest;
   bool _showDraggableFloat = false;
 
   @override
@@ -255,6 +256,7 @@ class _OverlayModeState extends State<OverlayModePage> {
 
   _removePreviousOverlay() {
     _overlayEntry?.remove();
+    _overlayTest?.remove();
     _overlayEntry = null;
   }
 
@@ -303,6 +305,7 @@ class _OverlayModeState extends State<OverlayModePage> {
     _overlayEntry = OverlayEntry(builder: (context) {
       return DraggableFloatWidget(
         child: widget.child,
+        dy: 60,
         eventStreamController: widget.eventStreamController,
         config: DraggableFloatWidgetBaseConfig(
           initPositionYInTop: false,
@@ -314,7 +317,23 @@ class _OverlayModeState extends State<OverlayModePage> {
       );
     });
 
+    _overlayTest = OverlayEntry(builder: (context) {
+      return DraggableFloatWidget(
+        child: widget.child,
+        dy: 10,
+        eventStreamController: widget.eventStreamController,
+        config: DraggableFloatWidgetBaseConfig(
+          initPositionYInTop: false,
+          initPositionYMarginBorder: 5,
+          borderTopContainTopBar: true,
+          borderBottom: widget.navigatorBarHeight + defaultBorderWidth,
+        ),
+        onTap: () => print("Drag onTap!"),
+      );
+    });
+
     /// Warning: context cannot be the context of MaterialApp
-    Overlay.of(context)?.insert(_overlayEntry!);
+    Overlay.of(context).insert(_overlayEntry!);
+    Overlay.of(context).insert(_overlayTest!);
   }
 }
